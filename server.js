@@ -26,7 +26,9 @@ function detach(ws,p) {
   const r=rooms.get(p.room); if(r){r.delete(ws); if(!r.size) rooms.delete(p.room); else publish(r);}
   p.room=null;
 }
-wss.on('connection', ws => {
+wss.on('connection', (ws, req) => {
+  console.log('[ws] connected from', req.socket.remoteAddress);
+  ws.on('error', err => console.error('[ws] client error:', err.message));
   const p={id:makeCode(),name:'Player',avatar:null,room:null,searching:false};
   clients.set(ws,p); send(ws,{type:'welcome',id:p.id,players:[]});
   ws.on('message', raw => {
@@ -71,4 +73,7 @@ wss.on('connection', ws => {
   });
   ws.on('close',()=>{p.searching=false;detach(ws,p);clients.delete(ws);const i=waiting.indexOf(ws);if(i>=0)waiting.splice(i,1);});
 });
-console.log('Jetpack Jung multiplayer server listening on port '+(process.env.PORT||8080));
+server.listen(PORT, '0.0.0.0', () => {
+  console.log(`Jetpack Jung multiplayer server listening on 0.0.0.0:${PORT}`);
+});
+server.on('error', err => console.error('[http] server error:', err));
