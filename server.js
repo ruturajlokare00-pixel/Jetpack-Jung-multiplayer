@@ -1,5 +1,18 @@
+const http = require('http');
 const WebSocket = require('ws');
-const wss = new WebSocket.Server({ port: process.env.PORT || 8080 });
+
+const PORT = Number(process.env.PORT) || 8080;
+const server = http.createServer((req, res) => {
+  if (req.method === 'GET' && (req.url === '/' || req.url === '/health')) {
+    res.writeHead(200, { 'content-type': 'application/json' });
+    res.end(JSON.stringify({ ok: true, service: 'jetpack-jung-multiplayer' }));
+    return;
+  }
+  res.writeHead(404);
+  res.end('Not found');
+});
+
+const wss = new WebSocket.Server({ server });
 const rooms = new Map(), clients = new Map(), waiting = [];
 const makeCode = () => Math.random().toString(36).slice(2,8).toUpperCase();
 const send = (ws, data) => { if (ws.readyState === WebSocket.OPEN) ws.send(JSON.stringify(data)); };
