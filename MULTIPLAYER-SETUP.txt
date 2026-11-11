@@ -1,0 +1,15 @@
+JETPACK JUNG — ONLINE MULTIPLAYER (COMBAT SYNC BUILD)
+
+Included: player movement/appearance snapshots, remote shot and grenade visuals, synchronized hit/HP/death/kill/respawn/loadout state, public matchmaking, and private rooms. Remote players are network-driven rather than locally controlled by bots.
+
+SERVER DEPLOYMENT
+1. Upload this folder to a Node.js hosting service that supports WebSockets.
+2. Run: npm install
+3. Run: npm start
+4. Copy the server's WebSocket URL (wss://... on hosted HTTPS sites).
+5. On each phone, open index.html, choose ONLINE MULTIPLAYER, enter the same server URL, and connect.
+6. One player chooses Create Room and shares the room code; others join it. Or both use Find Match.
+7. Once in the same room, press START ONLINE GAME on each device.
+
+IMPORTANT
+This is peer-relayed synchronization: each player's game client simulates its own shots and reports resulting combat state through the room server. It is suitable as a multiplayer prototype, but it is not a server-authoritative anti-cheat system and does not include lag compensation. Keep both players on the same game build/map settings. The server requires Node.js and the ws package.
